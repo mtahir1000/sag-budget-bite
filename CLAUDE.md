@@ -16,7 +16,7 @@ Never redirect users to another site to see prices.
 - Backend: Node.js Express (Railway)
 - Geocoding: Google Maps Geocoding API
 - Prices Phase 1: Kroger API (free, 35 states)
-- Prices Phase 2: BlueCart API (~$50-100/month, covers Allentown PA)
+- Prices Phase 2: Walmart via RapidAPI (free tier available, national coverage including Allentown PA)
 - Prices Phase 3: Actowiz (~$100-200/month, full national coverage)
 
 ## Current Features (Phase 1)
@@ -29,8 +29,8 @@ Never redirect users to another site to see prices.
 ## File Structure
 - backend/server.js — API endpoints, never changes between phases
 - backend/groceryService.js — provider router, NEVER MODIFY
-- backend/providers/kroger.js — Phase 1 active provider
-- backend/providers/bluecart.js — Phase 2 stub
+- backend/providers/kroger.js — Phase 1 provider (Kroger network, 35 states)
+- backend/providers/walmart.js — Phase 2 provider (Walmart, national)
 - backend/providers/actowiz.js — Phase 3 stub
 - frontend/src/App.jsx — main app component
 - frontend/src/App.css — all styles
@@ -52,14 +52,21 @@ Never redirect users to another site to see prices.
 
 ## Switching Phases
 Change one line in backend/.env:
-DATA_PROVIDER=kroger    (Phase 1 - current)
-DATA_PROVIDER=bluecart  (Phase 2 - covers Allentown PA)
-DATA_PROVIDER=actowiz   (Phase 3 - full national)
+DATA_PROVIDER=kroger   (Phase 1 - Kroger network, 35 states)
+DATA_PROVIDER=walmart  (Phase 2 - Walmart, national coverage)
+DATA_PROVIDER=actowiz  (Phase 3 - full national, all chains)
 
-## Test Zip Codes (Phase 1)
-- 77001 — Houston TX (best for testing)
+## Test Zip Codes
+Phase 1 (Kroger):
+- 77001 — Houston TX
 - 44101 — Cleveland OH
 - 30301 — Atlanta GA
+
+Phase 2 (Walmart — works anywhere in the US):
+- 18101 — Allentown PA (original target market)
+- 10001 — New York NY
+- 90001 — Los Angeles CA
+- 60601 — Chicago IL
 
 ## Deployment
 - Backend: Railway
