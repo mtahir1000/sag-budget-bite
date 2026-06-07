@@ -17,25 +17,35 @@ let tokenExpiresAt = 0;
 async function getKrogerToken() {
   if (cachedToken && Date.now() < tokenExpiresAt) return cachedToken;
 
-  const credentials = Buffer.from(
-    `${process.env.KROGER_CLIENT_ID}:${process.env.KROGER_CLIENT_SECRET}`
-  ).toString("base64");
+  try {
+    const credentials = Buffer.from(
+      `${process.env.KROGER_CLIENT_ID}:${process.env.KROGER_CLIENT_SECRET}`
+    ).toString("base64");
 
-  const response = await axios.post(
-    KROGER_TOKEN_URL,
-    "grant_type=client_credentials&scope=product.compact",
-    {
-      headers: {
-        Authorization: `Basic ${credentials}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    }
-  );
+    const response = await axios.post(
+      KROGER_TOKEN_URL,
+      "grant_type=client_credentials&scope=product.compact",
+      {
+        headers: {
+          Authorization: `Basic ${credentials}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
 
-  cachedToken = response.data.access_token;
-  tokenExpiresAt = Date.now() + response.data.expires_in * 1000 - 60000;
-  return cachedToken;
-}
+    cachedToken = response.data.access_token;
+    tokenExpiresAt = Date.now() + response.data.expires_in * 1000 - 60000;
+
+    console.log("Kroger token acquired successfully");
+
+    return cachedToken;
+  } catch (err) {
+    console.error("TOKEN ERROR STATUS:", err.response?.status);
+    console.error("TOKEN ERROR DATA:", err.response?.data);
+    throw err;
+  }
+};
+
 
 // ─── Geocode zip → lat/lng ────────────────────────────────────────────────────
 async function geocodeZip(zipCode) {
